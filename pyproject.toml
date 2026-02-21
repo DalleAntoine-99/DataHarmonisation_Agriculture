@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "gaia"
+version = "0.1.0"
+description = "Semantic harmonization of agricultural data using AI"
+authors = ["Antoine Dalle"]
+readme = "README.md"
+package-mode = false 
+
+[tool.poetry.dependencies]
+python = "^3.12"
+numpy = "1.26.4" 
+pandas = "2.3.3"        
+pyarrow = "14.0.2"
+openpyxl = "3.1.5"
+requests = "2.32.5"
+sentence-transformers = "2.7.0"
+scikit-learn = "1.8.0"
+fastapi = "0.104.1"
+uvicorn = "0.24.0"
+streamlit = "1.53.1"    
+elasticsearch = "8.19.3"
+psycopg2-binary = "2.9.11"
+python-dotenv = "1.2.1"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "7.4.4"
+pytest-cov = "4.1.0"
+black = "23.12.1"
+ruff = "0.1.15"
+ipykernel = "6.31.0"
