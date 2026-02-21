@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "gaia"
+name = "DataHarmonisation_Agriculture"
 version = "0.1.0"
 description = "Semantic harmonization of agricultural data using AI"
 authors = ["Antoine Dalle"]
