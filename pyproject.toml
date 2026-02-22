@@ -21,6 +21,8 @@ streamlit = "1.53.1"
 elasticsearch = "8.19.3"
 psycopg2-binary = "2.9.11"
 python-dotenv = "1.2.1"
+dbt-core = "^1.11.6"
+dbt-duckdb = "^1.10.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "7.4.4"
