@@ -615,6 +615,20 @@ files = [
 ]
 
 [[package]]
+name = "dbt"
+version = "1.0.0.40.14"
+description = "The dbt Cloud CLI - an ELT tool for running SQL transformations and data models in dbt Cloud. For more documentation on these commands, visit: docs.getdbt.com"
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "dbt-1.0.0.40.14.tar.gz", hash = "sha256:e3a1567cefd092e5bef240e4c7c67c026dd6897310d3f100b31c6e1696da5e14"},
+]
+
+[package.dependencies]
+setuptools = ">=61.2"
+
+[[package]]
 name = "dbt-adapters"
 version = "1.22.6"
 description = "The set of adapter protocols and base functionality that supports integration with dbt-core"
@@ -4309,4 +4323,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12"
-content-hash = "dd8c45438a8e7fb8fc15280aed22b4e986c925996d802af7832fe4e92bd9cd69"
+content-hash = "f50ffa53fe14633521fa833d3b36a26404fc28f8dd75acbd8953d793f107dc0c"

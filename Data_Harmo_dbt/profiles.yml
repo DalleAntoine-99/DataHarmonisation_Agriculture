@@ -1,0 +1,7 @@
+Data_Harmo_dbt:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: /opt/airflow/project/Data_Harmo_dbt/dev.duckdb
+      threads: 1

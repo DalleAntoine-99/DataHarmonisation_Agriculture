@@ -10,9 +10,21 @@ from pathlib import Path
 import pandas as pd
 
 # ── Chemins ───────────────────────────────────────────────────────────────────
-RAW_PATH      = Path("datalake/raw/dephy/variableCards/20260222/fichier-methodes-controle-biologique-expe1.xlsx")
-FORMATTED_DIR = Path("datalake/formatted/dephy/variableCards/20260222")
+PROJECT_ROOT  = Path(__file__).resolve().parents[2]
+
+# ── Résolution dynamique du fichier le plus récent ────────────────────────────
+def get_latest_raw(base_path: Path, pattern: str) -> Path:
+    files = sorted(base_path.glob(f"*/{pattern}"), reverse=True)
+    if not files:
+        print(f"Aucun fichier trouvé dans {base_path}")
+        sys.exit(2)
+    return files[0]
+
+RAW_PATH      = get_latest_raw(PROJECT_ROOT / "datalake/raw/dephy/variableCards", "*.xlsx")
+FORMATTED_DIR = PROJECT_ROOT / f"datalake/formatted/dephy/variableCards/{datetime.now(timezone.utc).strftime('%Y%m%d')}"
 OUTPUT_PATH   = FORMATTED_DIR / "part-00001.parquet"
+
+
 # ── Mapping colonnes xlsx → noms normalisés snake_case ───────────────────────
 COLUMN_MAPPING = {
     "Nom méthode":                                          "method_name",

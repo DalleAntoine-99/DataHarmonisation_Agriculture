@@ -1,0 +1,29 @@
+name: 'Data_Harmo_dbt'
+version: '1.0.0'
+
+profile: 'Data_Harmo_dbt'
+
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+# Variable globale injectable depuis la CLI ou Airflow
+# Utilisée dans stg_dephy.sql et stg_agrovoc.sql pour pointer le bon dossier Parquet
+vars:
+  run_date: "20260222"   # valeur par défaut si rien n'est passé en CLI
+
+models:
+  Data_Harmo_dbt:
+    staging:
+      +materialized: view    # staging = vues (léger, pas de stockage)
+    marts:
+      +materialized: table   # marts = tables (stockage physique dans DuckDB)
+    example:
+      +materialized: view

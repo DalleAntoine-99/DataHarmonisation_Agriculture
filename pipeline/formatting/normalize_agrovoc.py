@@ -11,18 +11,20 @@ from pathlib import Path
 import pandas as pd
 
 # ── Chemins ───────────────────────────────────────────────────────────────────
-RAW_DIR       = Path("datalake/raw/agrovoc/concepts/20260222")
-FORMATTED_DIR = Path("datalake/formatted/agrovoc/concepts/20260222")
+PROJECT_ROOT  = Path(__file__).resolve().parents[2]
+RAW_DIR       = PROJECT_ROOT / "datalake/raw/agrovoc"
+TODAY         = datetime.now(timezone.utc).strftime("%Y%m%d")
+FORMATTED_DIR = PROJECT_ROOT / f"datalake/formatted/agrovoc/concepts/{TODAY}"
 OUTPUT_PATH   = FORMATTED_DIR / "part-00001.parquet"
 
 def find_latest_json() -> Path:
     """Trouve le fichier JSON le plus récent dans datalake/raw/agrovoc/"""
-    json_files = sorted(RAW_DIR.rglob("agrovoc_dephy_terms.json"))
+    json_files = sorted(RAW_DIR.rglob("agrovoc_dephy_terms.json"), key=lambda p: p.stat().st_mtime)
     if not json_files:
-        print("❌ Aucun fichier agrovoc_dephy_terms.json trouvé dans datalake/raw/agrovoc/", file=sys.stderr)
+        print("Aucun fichier agrovoc_dephy_terms.json trouvé dans datalake/raw/agrovoc/", file=sys.stderr)
         sys.exit(2)
     latest = json_files[-1]
-    print(f"📂 Fichier JSON trouvé: {latest}")
+    print(f"Fichier JSON trouvé: {latest}")
     return latest
 
 def parse_raw_json(raw_path: Path) -> pd.DataFrame:

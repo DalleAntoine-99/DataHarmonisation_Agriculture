@@ -7,14 +7,17 @@ import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import List, Dict
+
 
 import requests
 from elasticsearch import Elasticsearch, helpers
 
 # ── Config ────────────────────────────────────────────────────────────────────
-ES_HOST  = "http://localhost:9200"
+ES_HOST  = "http://elasticsearch:9200"
 ES_INDEX = "agrovoc-concepts"
-RAW_DIR  = Path("datalake/raw/agrovoc") / datetime.now(timezone.utc).strftime("%Y-%m-%d")
+PROJECT_ROOT = Path("/opt/airflow/project")
+RAW_DIR = PROJECT_ROOT / "datalake/raw/agrovoc" / datetime.now(timezone.utc).strftime("%Y%m%d")
 RAW_DIR.mkdir(parents=True, exist_ok=True)
 
 # ── Termes DEPHY avec variantes pour améliorer le recall ─────────────────────
@@ -84,7 +87,7 @@ def get_es_client() -> Elasticsearch:
     return client
 
 # ── Fetch AGROVOC ─────────────────────────────────────────────────────────────
-def fetch_agrovoc(query: str, lang: str = "en", rows: int = 5) -> list[dict]:
+def fetch_agrovoc(query: str, lang: str = "en", rows: int = 5) -> List[Dict]:
     url = "https://agrovoc.fao.org/browse/rest/v1/agrovoc/search"
     try:
         resp = requests.get(
@@ -99,7 +102,7 @@ def fetch_agrovoc(query: str, lang: str = "en", rows: int = 5) -> list[dict]:
         return []
 
 # ── Préparer les documents ES ─────────────────────────────────────────────────
-def build_docs(dephy_term: str, matched_query: str, results: list[dict]) -> list[dict]:
+def build_docs(dephy_term: str, matched_query: str, results: List[Dict]) -> List[Dict]:
     return [{
         "dephy_term":      dephy_term,
         "matched_query":   matched_query,   # ← variante qui a matché

@@ -4,6 +4,7 @@ from pathlib import Path
 from datetime import datetime
 import pandas as pd
 from elasticsearch import Elasticsearch, helpers
+import os
 
 def clean_doc(row: dict) -> dict:
     """Nettoie les valeurs NaN et ajoute un champ d'indexation."""
@@ -17,7 +18,8 @@ def main():
     parser.add_argument("--src", required=True, help="Chemin du fichier xlsx")
     parser.add_argument("--sheet", default="BDD_méthodes", help="Nom de l'onglet (par défaut: BDD_méthodes)")
     parser.add_argument("--index", default="dephy-methodes", help="Nom de l'index ES")
-    parser.add_argument("--es", default="http://localhost:9200", help="URL Elasticsearch")
+    parser.add_argument("--es", default=os.getenv("ES_HOST", "http://elasticsearch:9200"), help="URL Elasticsearch")
+
     args = parser.parse_args()
 
     src = Path(args.src)
@@ -34,15 +36,15 @@ def main():
 
     client = Elasticsearch(hosts=[args.es])
     if not client.ping():
-        print("❌ Impossible de contacter Elasticsearch à", args.es, file=sys.stderr)
+        print("Impossible de contacter Elasticsearch à", args.es, file=sys.stderr)
         sys.exit(2)
 
     docs = [clean_doc(row) for row in df.to_dict(orient="records")]
 
     success, errors = helpers.bulk(client, docs, index=args.index, raise_on_error=False)
-    print(f"✅ {success} documents indexés dans '{args.index}'")
+    print(f"{success} documents indexés dans '{args.index}'")
     if errors:
-        print(f"⚠️  {len(errors)} erreurs:")
+        print(f"{len(errors)} erreurs:")
         for e in errors[:3]:
             print(" ", e)
 
